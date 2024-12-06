@@ -43,3 +43,19 @@ impl Field<char> {
         res
     }
 }
+
+pub fn split_by_empt_line(input: &str) -> Vec<Vec<String>> {
+    let mut result = vec![];
+    let mut current = vec![];
+    for line in input.lines() {
+        if line.is_empty() {
+            result.push(current.clone());
+            current.clear();
+        } else {
+            current.push(String::from(line));
+        }
+    }
+    result.push(current);
+
+    result
+}
