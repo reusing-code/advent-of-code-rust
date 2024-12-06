@@ -34,7 +34,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     for i in 0..field.h {
         let mut stack: Vec<char> = vec![];
         for j in 0..field.w {
-            stack.push(field.get(j, i));
+            stack.push(field.get(j, i)?);
             result += check_stack(&stack, &needles);
         }
     }
@@ -43,7 +43,7 @@ pub fn part_one(input: &str) -> Option<u32> {
     for j in 0..field.w {
         let mut stack: Vec<char> = vec![];
         for i in 0..field.h {
-            stack.push(field.get(j, i));
+            stack.push(field.get(j, i)?);
             result += check_stack(&stack, &needles);
         }
     }
@@ -58,7 +58,7 @@ pub fn part_one(input: &str) -> Option<u32> {
             if y < 0 || x < 0 || y >= field.h as i32 || x >= field.w as i32 {
                 continue;
             }
-            stack.push(field.get_signed(x, y));
+            stack.push(field.get_signed(x, y)?);
             result += check_stack(&stack, &needles);
         }
         stack.clear();
@@ -70,7 +70,7 @@ pub fn part_one(input: &str) -> Option<u32> {
             if y < 0 || x < 0 || y >= field.h as i32 || x >= field.w as i32 {
                 continue;
             }
-            stack.push(field.get_signed(x, y));
+            stack.push(field.get_signed(x, y)?);
             result += check_stack(&stack, &needles);
         }
     }
@@ -84,13 +84,13 @@ pub fn part_two(input: &str) -> Option<u32> {
 
     for y in 1..field.h - 1 {
         for x in 1..field.w - 1 {
-            if field.get(x, y) != 'A' {
+            if field.get(x, y)? != 'A' {
                 continue;
             }
-            let tl = field.get(x - 1, y - 1);
-            let tr = field.get(x + 1, y - 1);
-            let bl = field.get(x - 1, y + 1);
-            let br = field.get(x + 1, y + 1);
+            let tl = field.get(x - 1, y - 1)?;
+            let tr = field.get(x + 1, y - 1)?;
+            let bl = field.get(x - 1, y + 1)?;
+            let br = field.get(x + 1, y + 1)?;
             if (tl == 'M' || tl == 'S')
                 && (tr == 'M' || tr == 'S')
                 && (bl == 'M' || bl == 'S')
