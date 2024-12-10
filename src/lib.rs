@@ -43,6 +43,12 @@ where
     pub fn get_coord(&self, c: &Coord2D) -> Option<T> {
         return self.get_signed(c.x, c.y);
     }
+    pub fn get_coord_mut(&mut self, c: &Coord2D) -> Option<&mut T> {
+        if c.x < 0 || c.y < 0 || c.x >= self.w as i32 || c.y >= self.h as i32 {
+            return None;
+        }
+        return Some(&mut self.data[c.y as usize * self.w + c.x as usize]);
+    }
 
     pub fn set_coord(&mut self, c: &Coord2D, v: &T) {
         if c.x < 0 || c.y < 0 || c.x >= self.w as i32 || c.y >= self.h as i32 {
@@ -64,6 +70,24 @@ impl Field<char> {
             res.w = line.len();
             for c in line.chars() {
                 res.data.push(c);
+            }
+        }
+        res
+    }
+}
+
+impl Field<i32> {
+    pub fn new(input: &str) -> Field<i32> {
+        let mut res = Field {
+            data: vec![],
+            w: 0,
+            h: 0,
+        };
+        for line in input.lines() {
+            res.h += 1;
+            res.w = line.len();
+            for c in line.chars() {
+                res.data.push(c.to_string().parse::<i32>().unwrap());
             }
         }
         res
