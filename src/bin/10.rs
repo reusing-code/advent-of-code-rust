@@ -116,15 +116,6 @@ const DIRECTIONS: &'static [Coord2D] = &[
     Coord2D { x: 0, y: -1 },
 ];
 
-fn get_directions() -> Vec<Coord2D> {
-    vec![
-        Coord2D { x: 1, y: 0 },
-        Coord2D { x: -1, y: 0 },
-        Coord2D { x: 0, y: 1 },
-        Coord2D { x: 0, y: -1 },
-    ]
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

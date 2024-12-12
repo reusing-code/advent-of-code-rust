@@ -1,6 +1,6 @@
 pub mod template;
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Coord2D {
     pub x: i32,
     pub y: i32,
@@ -14,6 +14,13 @@ impl Coord2D {
         }
     }
 }
+
+pub const DIRECTIONS: &'static [Coord2D] = &[
+    Coord2D { x: 1, y: 0 },
+    Coord2D { x: -1, y: 0 },
+    Coord2D { x: 0, y: 1 },
+    Coord2D { x: 0, y: -1 },
+];
 
 #[derive(Clone, Debug)]
 pub struct Field<T> {
@@ -55,6 +62,13 @@ where
             panic!("Index out of bounds")
         }
         self.data[c.y as usize * self.w + c.x as usize] = v.clone();
+    }
+
+    pub fn coord_from_index(&self, i: i32) -> Coord2D {
+        Coord2D {
+            x: i % self.w as i32,
+            y: i / self.w as i32,
+        }
     }
 }
 
