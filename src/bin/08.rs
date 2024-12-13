@@ -17,13 +17,13 @@ fn parse(input: &str) -> (i32, i32, HashMap<char, Vec<Coord2D>>) {
                     .entry(c)
                     .and_modify(|v| {
                         v.push(Coord2D {
-                            x: x as i32,
-                            y: y as i32,
+                            x: x as i64,
+                            y: y as i64,
                         })
                     })
                     .or_insert(vec![Coord2D {
-                        x: x as i32,
-                        y: y as i32,
+                        x: x as i64,
+                        y: y as i64,
                     }]);
             }
         }
@@ -43,12 +43,12 @@ pub fn part_one(input: &str) -> Option<u32> {
             for ant2 in v.iter().skip(i + 1) {
                 {
                     let anti = calc_antinode(ant1, ant2);
-                    if anti.x >= 0 && anti.x < w as i32 && anti.y >= 0 && anti.y < h {
+                    if anti.x >= 0 && anti.x < w as i64 && anti.y >= 0 && anti.y < h as i64 {
                         antinodes.insert(anti);
                     }
                 }
                 let anti = calc_antinode(ant2, ant1);
-                if anti.x >= 0 && anti.x < w as i32 && anti.y >= 0 && anti.y < h {
+                if anti.x >= 0 && anti.x < w as i64 && anti.y >= 0 && anti.y < h as i64 {
                     antinodes.insert(anti);
                 }
             }
@@ -92,7 +92,7 @@ fn calc_antinode2(a: &Coord2D, b: &Coord2D, h: i32, w: i32) -> Vec<Coord2D> {
     let mut current = a.clone();
     let mut result = vec![];
 
-    while current.x >= 0 && current.x < w && current.y >= 0 && current.y < h {
+    while current.x >= 0 && current.x < w as i64 && current.y >= 0 && current.y < h as i64 {
         result.push(current.clone());
         current = current.add(&diff);
     }
@@ -102,7 +102,7 @@ fn calc_antinode2(a: &Coord2D, b: &Coord2D, h: i32, w: i32) -> Vec<Coord2D> {
         x: a.x - b.x,
         y: a.y - b.y,
     };
-    while current.x >= 0 && current.x < w && current.y >= 0 && current.y < h {
+    while current.x >= 0 && current.x < w as i64 && current.y >= 0 && current.y < h as i64 {
         result.push(current.clone());
         current = current.add(&diff2);
     }

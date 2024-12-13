@@ -26,8 +26,8 @@ fn parse_field(input: &str) -> (Field<char>, Coord2D) {
     for y in 0..field.h {
         for x in 0..field.w {
             if field.get(x, y).unwrap() == '^' {
-                current.x = x as i32;
-                current.y = y as i32;
+                current.x = x as i64;
+                current.y = y as i64;
                 field.set_coord(&current, &'U');
             }
         }

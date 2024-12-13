@@ -2,8 +2,8 @@ pub mod template;
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Coord2D {
-    pub x: i32,
-    pub y: i32,
+    pub x: i64,
+    pub y: i64,
 }
 
 impl Coord2D {
@@ -40,8 +40,8 @@ where
         return Some(self.data[y * self.w + x].clone());
     }
 
-    pub fn get_signed(&self, x: i32, y: i32) -> Option<T> {
-        if x < 0 || y < 0 || x >= self.w as i32 || y >= self.h as i32 {
+    pub fn get_signed(&self, x: i64, y: i64) -> Option<T> {
+        if x < 0 || y < 0 || x >= self.w as i64 || y >= self.h as i64 {
             return None;
         }
         return Some(self.data[y as usize * self.w + x as usize].clone());
@@ -51,23 +51,23 @@ where
         return self.get_signed(c.x, c.y);
     }
     pub fn get_coord_mut(&mut self, c: &Coord2D) -> Option<&mut T> {
-        if c.x < 0 || c.y < 0 || c.x >= self.w as i32 || c.y >= self.h as i32 {
+        if c.x < 0 || c.y < 0 || c.x >= self.w as i64 || c.y >= self.h as i64 {
             return None;
         }
         return Some(&mut self.data[c.y as usize * self.w + c.x as usize]);
     }
 
     pub fn set_coord(&mut self, c: &Coord2D, v: &T) {
-        if c.x < 0 || c.y < 0 || c.x >= self.w as i32 || c.y >= self.h as i32 {
+        if c.x < 0 || c.y < 0 || c.x >= self.w as i64 || c.y >= self.h as i64 {
             panic!("Index out of bounds")
         }
         self.data[c.y as usize * self.w + c.x as usize] = v.clone();
     }
 
-    pub fn coord_from_index(&self, i: i32) -> Coord2D {
+    pub fn coord_from_index(&self, i: i64) -> Coord2D {
         Coord2D {
-            x: i % self.w as i32,
-            y: i / self.w as i32,
+            x: i % self.w as i64,
+            y: i / self.w as i64,
         }
     }
 }

@@ -58,7 +58,7 @@ pub fn part_one(input: &str) -> Option<u32> {
             if y < 0 || x < 0 || y >= field.h as i32 || x >= field.w as i32 {
                 continue;
             }
-            stack.push(field.get_signed(x, y)?);
+            stack.push(field.get_signed(x as i64, y as i64)?);
             result += check_stack(&stack, &needles);
         }
         stack.clear();
@@ -70,7 +70,7 @@ pub fn part_one(input: &str) -> Option<u32> {
             if y < 0 || x < 0 || y >= field.h as i32 || x >= field.w as i32 {
                 continue;
             }
-            stack.push(field.get_signed(x, y)?);
+            stack.push(field.get_signed(x as i64, y as i64)?);
             result += check_stack(&stack, &needles);
         }
     }

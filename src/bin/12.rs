@@ -13,7 +13,7 @@ pub fn part_one(input: &str) -> Option<i64> {
     visited.data.resize(field.data.len(), false);
     let mut result = 0;
     for (i, c) in field.data.iter().enumerate() {
-        let coord = field.coord_from_index(i as i32);
+        let coord = field.coord_from_index(i as i64);
         if visited.data[i] {
             continue;
         }
@@ -61,7 +61,7 @@ pub fn part_two(input: &str) -> Option<i64> {
     visited.data.resize(field.data.len(), false);
     let mut result = 0;
     for (i, c) in field.data.iter().enumerate() {
-        let coord = field.coord_from_index(i as i32);
+        let coord = field.coord_from_index(i as i64);
         if visited.data[i] {
             continue;
         }
@@ -158,10 +158,6 @@ mod tests {
 
     #[test]
     fn test_part_two() {
-        let result = part_two(&advent_of_code::template::read_file_part(
-            "examples", DAY, 4,
-        ));
-        //assert_eq!(result, Some(159));
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(80));
         let result = part_two(&advent_of_code::template::read_file_part(

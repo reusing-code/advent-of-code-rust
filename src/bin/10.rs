@@ -24,8 +24,8 @@ pub fn part_one(input: &str) -> Option<i64> {
         .filter(|(_i, v)| **v == 9)
         .for_each(|(i, _v)| {
             let c = Coord2D {
-                x: (i % field.w) as i32,
-                y: (i / field.w) as i32,
+                x: (i % field.w) as i64,
+                y: (i / field.w) as i64,
             };
             reachable_nines.data[i].insert(c.clone());
             current.insert(c);
@@ -76,8 +76,8 @@ pub fn part_two(input: &str) -> Option<i64> {
         .filter(|(_i, v)| **v == 9 || **v == 0)
         .for_each(|(i, v)| {
             let c = Coord2D {
-                x: (i % field.w) as i32,
-                y: (i / field.w) as i32,
+                x: (i % field.w) as i64,
+                y: (i / field.w) as i64,
             };
             if *v == 9 {
                 reachable_nines.data[i] = 1;
