@@ -61,28 +61,13 @@ pub fn part_two(input: &str) -> Option<i64> {
 fn part_two_internal(input: &str, room_size: Coord2D) -> Option<i64> {
     let robots = parse_robots(input);
     let mut pos: Vec<_> = robots.iter().map(|r| r.start.clone()).collect();
-    for (i, r) in robots.iter().enumerate() {
-        pos[i].x = r.start.x;
-        pos[i].y = r.start.y;
-    }
     let tmp_dir = Builder::new().keep(true).prefix("aoc-").tempdir().unwrap();
     let mut hashes = HashSet::new();
-    for step in 1..10000001 {
+    for step in 1..15000 {
         for (i, r) in robots.iter().enumerate() {
             pos[i].x = (pos[i].x + r.v.x).rem_euclid(room_size.x);
             pos[i].y = (pos[i].y + r.v.y).rem_euclid(room_size.y);
         }
-        /*let mut valid = true;
-        for (i, p) in pos.iter().enumerate() {
-            if !pos
-                .iter()
-                .enumerate()
-                .any(|(i2, p2)| i != i2 && (p2.x - p.x).abs() <= 1 && (p2.y - p.y).abs() <= 1)
-            {
-                valid = false;
-                break;
-            }
-        }*/
         let mut hasher = DefaultHasher::new();
         pos.hash(&mut hasher);
         let h = hasher.finish();
