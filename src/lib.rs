@@ -1,6 +1,6 @@
 pub mod template;
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
 pub struct Coord2D {
     pub x: i64,
     pub y: i64,
@@ -26,7 +26,7 @@ pub fn opposite_direction(c: &Coord2D) -> Coord2D {
     Coord2D { x: -c.x, y: -c.y }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Field<T> {
     pub data: Vec<T>,
     pub w: usize,
