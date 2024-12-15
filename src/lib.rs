@@ -22,6 +22,10 @@ pub const DIRECTIONS: &'static [Coord2D] = &[
     Coord2D { x: 0, y: -1 },
 ];
 
+pub fn opposite_direction(c: &Coord2D) -> Coord2D {
+    Coord2D { x: -c.x, y: -c.y }
+}
+
 #[derive(Clone, Debug)]
 pub struct Field<T> {
     pub data: Vec<T>,
@@ -80,6 +84,22 @@ impl Field<char> {
             h: 0,
         };
         for line in input.lines() {
+            res.h += 1;
+            res.w = line.len();
+            for c in line.chars() {
+                res.data.push(c);
+            }
+        }
+        res
+    }
+
+    pub fn parse_vec(input: &Vec<String>) -> Field<char> {
+        let mut res = Field {
+            data: vec![],
+            w: 0,
+            h: 0,
+        };
+        for line in input {
             res.h += 1;
             res.w = line.len();
             for c in line.chars() {
