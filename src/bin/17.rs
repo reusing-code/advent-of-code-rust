@@ -1,3 +1,5 @@
+use core::panic;
+
 use advent_of_code::split_by_empt_line;
 
 advent_of_code::solution!(17);
@@ -14,7 +16,7 @@ struct Machine {
     c: i64,
 
     sp: usize,
-    program: Vec<Op>,
+    program: Vec<u8>,
 }
 
 impl Machine {
@@ -27,12 +29,7 @@ impl Machine {
             sp: 0,
             program: split_emptyline[1][0][9..]
                 .split(',')
-                .step_by(2)
-                .zip(split_emptyline[1][0].split(',').skip(1).step_by(2))
-                .map(|(opc, opr)| Op {
-                    opcode: opc.parse::<u8>().unwrap(),
-                    operand: opr.parse::<u8>().unwrap(),
-                })
+                .map(|x| x.parse::<u8>().unwrap())
                 .collect::<Vec<_>>(),
         };
         machine
@@ -51,7 +48,10 @@ impl Machine {
         }
     }
     fn step(&mut self) -> Option<u8> {
-        let op = &self.program[self.sp];
+        let op = Op {
+            opcode: self.program[self.sp],
+            operand: self.program[self.sp + 1],
+        };
         let mut output = None;
         match op.opcode {
             0 => self.a = self.a / (2_i64.pow(self.get_combo_operand(op.operand) as u32)),
@@ -59,7 +59,7 @@ impl Machine {
             2 => self.b = self.get_combo_operand(op.operand) % 8,
             3 => {
                 if self.a != 0 {
-                    self.sp = op.operand as usize / 2;
+                    self.sp = op.operand as usize;
                     return None;
                 }
             }
@@ -72,12 +72,12 @@ impl Machine {
             }
         }
 
-        self.sp += 1;
+        self.sp += 2;
         output
     }
 
     fn ready(&self) -> bool {
-        self.sp < self.program.len()
+        self.sp < self.program.len() - 1
     }
 
     fn run(&mut self) -> Option<String> {
@@ -129,22 +129,32 @@ pub fn part_one(input: &str) -> Option<String> {
 pub fn part_two(input: &str) -> Option<i64> {
     let machine = Machine::parse_machine(input);
     let split_emptyline = split_by_empt_line(input);
-    let goal_machine = &split_emptyline[1][0][9..]
+    let goal_machine = split_emptyline[1][0][9..]
         .split(",")
         .map(|x| x.parse::<u8>().unwrap())
         .collect::<Vec<_>>();
-    let mut i = 0;
-    loop {
-        if i % 1000000000 == 0 {
-            println!("i: {i}");
+
+    let mut a_options = vec![0];
+    for i in 0..goal_machine.len() {
+        let local_goal = goal_machine
+            .iter()
+            .skip(goal_machine.len() - i - 1)
+            .map(|x| *x)
+            .collect::<Vec<u8>>();
+        let mut new_a_options = vec![];
+        for a in a_options {
+            let aa = a << 3;
+            for da in 0..8 {
+                let mut m = machine.clone();
+                m.a = aa + da;
+                if m.run_with_goal(&local_goal) {
+                    new_a_options.push(aa + da);
+                }
+            }
         }
-        let mut m = machine.clone();
-        m.a = i;
-        if m.run_with_goal(goal_machine) {
-            return Some(i);
-        }
-        i += 1;
+        a_options = new_a_options;
     }
+    Some(a_options[0])
 }
 
 #[cfg(test)]
@@ -155,6 +165,10 @@ mod tests {
     fn test_part_one() {
         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
         assert_eq!(result, Some(String::from("4,6,3,5,6,3,5,2,1,0")));
+        let result = part_one(&advent_of_code::template::read_file_part(
+            "examples", DAY, 2,
+        ));
+        assert_eq!(result, Some(String::from("5,7,3,0")));
     }
 
     #[test]
