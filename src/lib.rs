@@ -108,6 +108,17 @@ impl Field<char> {
         }
         res
     }
+
+    pub fn print(&self) {
+        for y in 0..self.h {
+            println!(
+                "{}",
+                self.data[y * self.w..(y + 1) * self.w]
+                    .iter()
+                    .collect::<String>()
+            );
+        }
+    }
 }
 
 impl Field<i32> {
