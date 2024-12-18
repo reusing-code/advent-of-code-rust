@@ -51,6 +51,13 @@ where
         return Some(self.data[y as usize * self.w + x as usize].clone());
     }
 
+    pub fn get_mut(&mut self, x: usize, y: usize) -> Option<&mut T> {
+        if x >= self.w || y >= self.h {
+            return None;
+        }
+        return Some(&mut self.data[y * self.w + x]);
+    }
+
     pub fn get_coord(&self, c: &Coord2D) -> Option<T> {
         return self.get_signed(c.x, c.y);
     }
@@ -115,6 +122,20 @@ impl Field<char> {
                 "{}",
                 self.data[y * self.w..(y + 1) * self.w]
                     .iter()
+                    .collect::<String>()
+            );
+        }
+    }
+}
+
+impl Field<bool> {
+    pub fn print(&self) {
+        for y in 0..self.h {
+            println!(
+                "{}",
+                self.data[y * self.w..(y + 1) * self.w]
+                    .iter()
+                    .map(|x| if *x { '#' } else { '.' })
                     .collect::<String>()
             );
         }
