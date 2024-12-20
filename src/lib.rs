@@ -13,6 +13,10 @@ impl Coord2D {
             y: self.y + other.y,
         }
     }
+
+    pub fn manhatten(&self, other: &Coord2D) -> i64 {
+        (self.x - other.x).abs() + (self.y - other.y).abs()
+    }
 }
 
 pub const DIRECTIONS: &'static [Coord2D] = &[
