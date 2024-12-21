@@ -7,14 +7,16 @@ advent_of_code::solution!(21);
 
 struct Cache {
     max_depth: usize,
-    options: HashMap<(Coord2D, Coord2D), Vec<Vec<char>>>,
+    options_l: HashMap<(Coord2D, Coord2D), Vec<Vec<char>>>,
+    options_s: HashMap<(Coord2D, Coord2D), Vec<Vec<char>>>,
     rec: HashMap<(usize, Vec<char>), i64>,
 }
 
 fn calc(input: &str, max_depth: usize) -> Option<i64> {
     let mut cache = Cache {
         max_depth,
-        options: HashMap::new(),
+        options_l: HashMap::new(),
+        options_s: HashMap::new(),
         rec: HashMap::new(),
     };
     Some(
@@ -76,7 +78,7 @@ fn get_coord(c: char) -> Coord2D {
 }
 
 fn calc_seq_len_single(current: &Coord2D, diff: &Coord2D, cache: &mut Cache) -> i64 {
-    let options = get_options(current, diff, cache);
+    let options = get_options_l(current, diff, cache);
 
     let mut min = i64::MAX;
     for opt in options {
@@ -89,10 +91,68 @@ fn calc_seq_len_single(current: &Coord2D, diff: &Coord2D, cache: &mut Cache) -> 
 
     min
 }
-
-fn get_options(current: &Coord2D, diff: &Coord2D, cache: &mut Cache) -> Vec<Vec<char>> {
+fn get_options_s(current: &Coord2D, diff: &Coord2D, cache: &mut Cache) -> Vec<Vec<char>> {
     let cache_key = &(current.clone(), diff.clone());
-    let entry = cache.options.get(cache_key);
+    let entry = cache.options_s.get(cache_key);
+    if entry.is_some() {
+        return entry.unwrap().clone();
+    }
+    let mut moves = vec![];
+
+    moves.resize(
+        diff.x.abs() as usize,
+        if diff.x < 0 {
+            Coord2D { x: -1, y: 0 }
+        } else {
+            Coord2D { x: 1, y: 0 }
+        },
+    );
+    moves.resize(
+        (diff.x.abs() + diff.y.abs()) as usize,
+        if diff.y < 0 {
+            Coord2D { x: 0, y: -1 }
+        } else {
+            Coord2D { x: 0, y: 1 }
+        },
+    );
+
+    let result = moves
+        .iter()
+        .permutations(moves.len())
+        .unique()
+        .filter(|x| {
+            let mut c = current.clone();
+            for step in x {
+                c = c.add(step);
+                if c.x == 2 && c.y == 0 {
+                    return false;
+                }
+            }
+            return true;
+        })
+        .map(|x| {
+            x.iter()
+                .map(|f| match **f {
+                    Coord2D { x: 1, y: 0 } => '<',
+                    Coord2D { x: -1, y: 0 } => '>',
+                    Coord2D { x: 0, y: 1 } => 'v',
+                    Coord2D { x: 0, y: -1 } => '^',
+                    _ => ' ',
+                })
+                .collect::<Vec<_>>()
+        })
+        .map(|mut x| {
+            x.push('A');
+            x
+        })
+        .collect::<Vec<_>>();
+    cache.options_s.insert(cache_key.clone(), result.clone());
+    result
+}
+
+fn get_options_l(current: &Coord2D, diff: &Coord2D, cache: &mut Cache) -> Vec<Vec<char>> {
+    let cache_key = &(current.clone(), diff.clone());
+    let entry = cache.options_l.get(cache_key);
     if entry.is_some() {
         return entry.unwrap().clone();
     }
@@ -145,7 +205,7 @@ fn get_options(current: &Coord2D, diff: &Coord2D, cache: &mut Cache) -> Vec<Vec<
             x
         })
         .collect::<Vec<_>>();
-    cache.options.insert(cache_key.clone(), result.clone());
+    cache.options_l.insert(cache_key.clone(), result.clone());
     result
 }
 
@@ -162,8 +222,7 @@ fn calc_small_rec(depth: usize, seq: &Vec<char>, cache: &mut Cache) -> i64 {
     let mut last = Coord2D { x: 0, y: 0 };
     for c in seq {
         let next = get_coord(*c);
-        let mut diff = next.sub(&last);
-        diff.y = -diff.y;
+        let diff = next.sub(&last);
         res += calc_small_rec_single(depth, &last, &diff, cache);
 
         last = next;
@@ -179,7 +238,7 @@ fn calc_small_rec_single(
     diff: &Coord2D,
     cache: &mut Cache,
 ) -> i64 {
-    let options = get_options(current, diff, cache);
+    let options = get_options_s(current, diff, cache);
 
     let mut min = i64::MAX;
     for opt in options {
