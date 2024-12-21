@@ -14,6 +14,13 @@ impl Coord2D {
         }
     }
 
+    pub fn sub(&self, other: &Coord2D) -> Coord2D {
+        Coord2D {
+            x: self.x - other.x,
+            y: self.y - other.y,
+        }
+    }
+
     pub fn manhatten(&self, other: &Coord2D) -> i64 {
         (self.x - other.x).abs() + (self.y - other.y).abs()
     }

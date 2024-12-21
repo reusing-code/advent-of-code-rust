@@ -30,6 +30,7 @@ dependencies = [
  "chrono",
  "dhat",
  "image",
+ "itertools 0.13.0",
  "pico-args",
  "ratatui",
  "regex",
