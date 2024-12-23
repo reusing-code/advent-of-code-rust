@@ -59,12 +59,11 @@ pub fn part_two(input: &str) -> Option<String> {
             if subset.len() + 1 <= largest_len {
                 continue;
             }
-            let mut local_subset = subset.clone();
-            local_subset.push(pc);
 
             if all_connected(&conns, &subset) {
-                largest_len = local_subset.len();
-                largest_elems = local_subset;
+                largest_len = subset.len() + 1;
+                largest_elems = subset.clone();
+                largest_elems.push(pc);
             }
         }
     }
