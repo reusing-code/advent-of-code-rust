@@ -247,67 +247,6 @@ impl fmt::Display for Gateo {
     }
 }
 
-pub fn part_two_internal(input: &str, _swaps: usize) -> Option<String> {
-    let (_, mut gates) = parse_input(input);
-    let mut gate_map = HashMap::new();
-    for gate in &gates {
-        gate_map.insert(gate.c, gate.clone());
-    }
-    gates.sort_by(|a, b| a.c.cmp(b.c));
-    let mut previous_xy_gates: Vec<&Gate> = vec![];
-    let mut save_gates: Vec<&Gate> = vec![];
-    gates.iter().filter(|g| g.c.starts_with("z")).for_each(|g| {
-        println!("{}: {}\n", g.c, print_rec(&gate_map, g.c));
-        let mut check = || {
-            let curr_gates = get_gates_rec(&gate_map, g.c);
-            if g.c != "z00" && g.c != "z01" {
-                for pg in &previous_xy_gates {
-                    if !curr_gates.iter().any(|g| **g == **pg) {
-                        return false;
-                    }
-                }
-                let mut find_xor = false;
-                let mut find_and1 = false;
-
-                let num = g.c[1..].parse::<u32>().unwrap();
-                for &cg in &curr_gates {
-                    if cg.a.starts_with("x") || cg.a.starts_with("y") {
-                        let num2 = cg.a[1..].parse::<u32>().unwrap();
-                        if num2 == num && cg.op == Operation::XOR {
-                            find_xor = true;
-                        }
-                        if num2 == num - 1 && cg.op == Operation::AND {
-                            find_and1 = true;
-                        }
-                    }
-                }
-                if !find_and1 || !find_xor {
-                    return false;
-                }
-            }
-
-            save_gates = curr_gates.clone();
-            previous_xy_gates = curr_gates
-                .iter()
-                .filter(|g| g.a.starts_with("x") || g.a.starts_with("y"))
-                .map(|g| *g)
-                .collect::<Vec<&Gate>>();
-            true
-        };
-
-        if !check() {
-            let mut gats = gate_map.clone();
-            for g in &save_gates {
-                gats.remove(g.c);
-            }
-            for g in gats {
-                println!("{}", g.0);
-            }
-        }
-    });
-    None
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
