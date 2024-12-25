@@ -47,7 +47,7 @@ pub fn part_one(input: &str) -> Option<i64> {
     Some(result)
 }
 
-pub fn part_two(input: &str) -> Option<i64> {
+pub fn part_two(_input: &str) -> Option<i64> {
     None
 }
 
