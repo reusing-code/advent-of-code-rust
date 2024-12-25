@@ -237,17 +237,7 @@ pub fn part_two(input: &str) -> Option<String> {
             },
         );
     }
-    /*
-        let mut gate_vec = vec![];
-        gate_vec.extend(gates.into_values());
-        gate_vec.sort_by(|a, b| a.c[1..].cmp(&b.c[1..]));
-
-        for g in gate_vec {
-            println!("{}", g);
-        }
-
-        // END c44 == z45
-    */
+    // END c44 == z45
     None
 }
 
@@ -315,43 +305,6 @@ pub fn part_two_internal(input: &str, _swaps: usize) -> Option<String> {
             }
         }
     });
-    /*   gates.iter().filter(|g| g.c.starts_with("z")).for_each(|g| {
-        println!("{}", print_rec(&gate_map, g.c));
-        println!("out: {}: {:?}", g.c, find_rec(&gate_map, g.c, &g.c[1..], 0))
-    });*/
-    /*
-        for i in 0..gates.len() {
-            for i2 in i + 1..gates.len() {
-                for j in i + 1..gates.len() {
-                    if j == i2 {
-                        continue;
-                    }
-                    for j2 in j + 1..gates.len() {
-                        if j2 == i2 {
-                            continue;
-                        }
-                        let mut new_gates = gates.clone();
-                        (new_gates[i].c, new_gates[i2].c) = (new_gates[i2].c, new_gates[i].c);
-                        (new_gates[j].c, new_gates[j2].c) = (new_gates[j2].c, new_gates[j].c);
-                        let mut gate_map = HashMap::new();
-                        for gate in &new_gates {
-                            gate_map.insert(gate.c, gate.clone());
-                        }
-                        if plausible(&gate_map) {
-                            let mut result = vec![
-                                new_gates[i].c,
-                                new_gates[i2].c,
-                                new_gates[j].c,
-                                new_gates[j2].c,
-                            ];
-                            result.sort();
-                            println!("Plausible: {:?}", result.join(","));
-                        }
-                    }
-                }
-            }
-        }
-    */
     None
 }
 
